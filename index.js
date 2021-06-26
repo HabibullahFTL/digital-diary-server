@@ -29,7 +29,22 @@ client.connect(err => {
         app.get('/', (req, res) => {
             res.send({ message: "Welcome to digital dairy API system" });
         })
-        // For Showing all the blogs
+
+
+        // ============ [ For Creating new service ]==============
+        app.post('/write-blog', (req, res) => {
+            const blog = req.body;
+            blog.createdAt = now;
+            blogCollection.insertOne(blog).then(result => {
+                if (result.insertedCount > 0) {
+                    res.send(result.ops[0])
+                } else {
+                    res.send({ message: "Something went wrong" })
+                }
+            })
+        })
+
+        // ============ [ For Showing all the blogs ]==============
         app.get('/all-blogs', (req, res) => {
             blogCollection.find({})
                 .sort({ _id: -1 })
