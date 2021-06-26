@@ -4,6 +4,8 @@ var cors = require('cors');
 const moment = require('moment');
 require('dotenv').config();
 const { MongoClient } = require('mongodb');
+const ObjectID = require('mongodb').ObjectID;
+
 
 const app = express();
 const uri = `mongodb+srv://${process.env.DB_USER_NAME}:${process.env.DB_PASSWORD}@cluster0.ummk1.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`;
@@ -51,6 +53,16 @@ client.connect(err => {
                 .sort({ _id: -1 })
                 .toArray((err, documents) => {
                     res.send(documents)
+                })
+        })
+
+        // ============ [ For Showing Single Blog ]==============
+        app.get('/blog', (req, res) => {
+            const { blog_id } = req.query;
+            blogCollection.find({ _id: ObjectID(blog_id) })
+                .sort({ _id: -1 })
+                .toArray((err, documents) => {
+                    res.send(documents[0])
                 })
         })
 
