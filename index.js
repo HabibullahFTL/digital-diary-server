@@ -22,6 +22,7 @@ const now = moment().format("YYYY-MM-DD HH:mm:ss");
 
 client.connect(err => {
     const blogCollection = client.db(process.env.DB_NAME).collection("blogs");
+    const adminCollection = client.db(process.env.DB_NAME).collection("admins");
     // perform actions on the collection object
     if (err) {
         console.log("There is an error");
@@ -31,7 +32,7 @@ client.connect(err => {
         })
 
 
-        // ============ [ For Creating new service ]==============
+        // ============ [ For Creating new blog ]==============
         app.post('/write-blog', (req, res) => {
             const blog = req.body;
             blog.createdAt = now;
@@ -47,6 +48,29 @@ client.connect(err => {
         // ============ [ For Showing all the blogs ]==============
         app.get('/all-blogs', (req, res) => {
             blogCollection.find({})
+                .sort({ _id: -1 })
+                .toArray((err, documents) => {
+                    res.send(documents)
+                })
+        })
+
+
+        // ============ [ For Adding New Admin ]==============
+        app.post('/add-admin', (req, res) => {
+            const admin = req.body;
+            admin.createdAt = now;
+            adminCollection.insertOne(admin).then(result => {
+                if (result.insertedCount > 0) {
+                    res.send(result.ops[0])
+                } else {
+                    res.send({ message: "Something went wrong" })
+                }
+            })
+        })
+
+        // ============ [ For Showing all Admins ]==============
+        app.get('/all-admins', (req, res) => {
+            adminCollection.find({})
                 .sort({ _id: -1 })
                 .toArray((err, documents) => {
                     res.send(documents)
