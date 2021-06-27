@@ -88,6 +88,18 @@ client.connect(err => {
                     res.send(documents)
                 })
         })
+
+        // ============ [ For deleting service ]==============
+        app.put('/delete-service', (req, res) => {
+            const { service_id } = req.query;
+            serviceCollection.deleteOne({ _id: ObjectID(service_id) })
+                .then(result => {
+                    res.send(result.deletedCount > 0)
+                })
+                .catch(err => {
+                    res.send(false)
+                })
+        })
     }
 });
 
