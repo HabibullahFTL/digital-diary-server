@@ -65,6 +65,18 @@ client.connect(err => {
                     res.send(documents[0])
                 })
         })
+        
+        // ============ [ For deleting blog ]==============
+        app.put('/remove-blog', (req, res) => {
+            const { blog_id } = req.query;
+            blogCollection.deleteOne({ _id: ObjectID(blog_id) })
+                .then(result => {
+                    res.send(result.deletedCount > 0)
+                })
+                .catch(err => {
+                    res.send(false)
+                })
+        })
 
 
         // ============ [ For Adding New Admin ]==============
@@ -89,7 +101,7 @@ client.connect(err => {
                 })
         })
 
-        // ============ [ For deleting service ]==============
+        // ============ [ For removing admin ]==============
         app.put('/remove-admin', (req, res) => {
             const { admin_id } = req.query;
             adminCollection.deleteOne({ _id: ObjectID(admin_id) })
