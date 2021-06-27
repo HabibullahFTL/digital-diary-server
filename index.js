@@ -90,9 +90,9 @@ client.connect(err => {
         })
 
         // ============ [ For deleting service ]==============
-        app.put('/delete-service', (req, res) => {
-            const { service_id } = req.query;
-            serviceCollection.deleteOne({ _id: ObjectID(service_id) })
+        app.put('/remove-admin', (req, res) => {
+            const { admin_id } = req.query;
+            adminCollection.deleteOne({ _id: ObjectID(admin_id) })
                 .then(result => {
                     res.send(result.deletedCount > 0)
                 })
